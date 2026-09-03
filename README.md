@@ -1,74 +1,130 @@
-# Pharmacy E-commerce Category Management Analytics
+# Pharmacy Category Management Analytics
 
-> **End-to-end, production-style portfolio project** for pharmacy retail category analytics: sales, assortment, inventory, supplier performance, pricing, promotions and profitability.
+[![SQL Server](https://img.shields.io/badge/SQL%20Server-T--SQL-CC2927?logo=microsoftsqlserver&logoColor=white)](sql/)
+[![Python](https://img.shields.io/badge/Python-pandas%20%7C%20validation-3776AB?logo=python&logoColor=white)](python/)
+[![Power BI](https://img.shields.io/badge/Power%20BI-DAX%20%7C%20report%20design-F2C811?logo=powerbi&logoColor=black)](powerbi/)
+[![Data](https://img.shields.io/badge/Data-100%25%20Synthetic-2E8B57)](data/sample/)
+[![Portfolio](https://img.shields.io/badge/Portfolio-Production--Style-0F4C45)](#portfolio-value)
+
+> **End-to-end, production-style pharmacy retail category analytics portfolio** connecting sales, margin, assortment, inventory, supplier service, pricing, promotions, and branch performance into a governed decision-support workflow.
 >
-> **Tech:** SQL Server · T-SQL · Python/pandas · Excel/Power Query concepts · Power BI/DAX · Git/GitHub
->
-> **Data policy:** synthetic portfolio data only. No confidential employer, customer, prescription or production data.
+> **Data policy:** realistic synthetic portfolio data only. No confidential employer, customer, patient, prescription, or production data.
+
+---
+
+## Recruiter Quick View
+
+| Area | What this project demonstrates |
+|---|---|
+| **Business domain** | Pharmacy retail, category management, inventory, supplier performance, pricing, promotions |
+| **SQL** | Data modeling, staging, analytical views, KPI logic, DQ checks, reconciliation, business queries |
+| **Python** | pandas validation, explicit join validation, ABC segmentation, reusable QA outputs |
+| **Power BI / DAX** | KPI measure design, semantic-layer principles, page architecture, filter-aware reporting logic |
+| **Data quality** | Duplicate checks, orphan detection, arithmetic reconciliation, impossible-value rules |
+| **Decision support** | KEEP / PROTECT-REPLENISH / REVIEW-REDUCE / REVIEW-REMOVE / EXPIRY-ACTION flags |
+| **Portfolio engineering** | Synthetic data, reproducible setup, documentation, Git/GitHub, CI validation |
+
+### Target Roles
+
+**E-commerce Category Specialist · Category Analyst · Category Management Analyst · Pharmacy / Retail Data Analyst · Commercial Analytics Analyst · Inventory Analyst · Business Intelligence Analyst · Retail Performance Analyst**
 
 ---
 
 ## Executive Summary
 
-This project demonstrates how a pharmacy **E-commerce Category Specialist / Category Analyst** can connect commercial and operational data into one decision-support workflow.
+Pharmacy category decisions are often fragmented across sales reports, inventory files, vendor follow-up, promotion reviews, and manual assortment decisions. This project demonstrates how those signals can be brought into a single analytical workflow.
 
-It answers questions such as:
+The project answers questions such as:
 
-- Which categories and SKUs drive sales and gross margin?
-- Which products need **Keep / Replenish / Reduce / Remove / Expiry Action** review?
-- Where are OOS, overstock, dead-stock or near-expiry risks concentrated?
-- Which suppliers combine strong commercial contribution with reliable fulfillment and lead time?
+- Which categories and SKUs drive **sales, gross margin, units, and contribution**?
+- Which products require **Keep / Replenish / Reduce / Remove / Expiry Action** review?
+- Where are **OOS, overstock, dead-stock, and near-expiry** risks concentrated?
+- Which suppliers combine commercial contribution with reliable **fill rate and lead time**?
 - Which high-volume products have weak margin, and which high-margin products have low velocity?
 - How does category performance differ across branches and cities?
-- How should promotion performance be reviewed without making unsupported causal claims?
+- How should promotional performance be reviewed without making unsupported causal claims?
 
-The public repository is intentionally compact and reproducible. It includes an executable SQL Server demo with **5 synthetic branches, 12 SKUs, 4 suppliers and 6 months of sales (360 branch-SKU-month rows)** plus a smaller CSV sample for Python validation.
-
----
-
-## Business Problem
-
-Pharmacy category decisions are often fragmented across sales reports, stock files, supplier follow-up and manual assortment reviews. A category specialist needs one analytical framework that links:
-
-**Sales → Margin → Assortment → Availability → Inventory Risk → Supplier Service → Pricing → Promotions → Action**
-
-The goal of this portfolio is not to automate commercial decisions. It creates a governed analytical layer that helps management identify exceptions, prioritize review, and make better-informed category decisions.
+The goal is not to automate commercial decisions. It creates a governed analytical layer that helps management identify exceptions, prioritize review, and make better-informed category decisions.
 
 ---
 
-## Analytical Workflow
+## Business Decision Flow
 
 ```text
-BUSINESS PROBLEM
-      ↓
-BUSINESS QUESTIONS & KPI DEFINITIONS
-      ↓
-SYNTHETIC SOURCE DATA
-      ↓
-STAGING TABLES + KEYS + GRAIN
-      ↓
-DATA QUALITY & RECONCILIATION
-      ↓
-ANALYTICAL SQL VIEWS
-      ↓
-SQL BUSINESS ANALYSIS
-      ↓
-PYTHON VALIDATION / EDA
-      ↓
-POWER BI SEMANTIC MEASURES
-      ↓
-CATEGORY DASHBOARDS & DECISIONS
-      ↓
-GIT / GITHUB DOCUMENTATION
+Sales
+  ↓
+Margin & Contribution
+  ↓
+Assortment Performance
+  ↓
+Availability & Inventory Risk
+  ↓
+Supplier Service
+  ↓
+Pricing & Promotions
+  ↓
+Branch / Local Performance
+  ↓
+Recommended Review Action
 ```
 
-The project follows the principle: **business logic first, data quality second, visualization last**.
+This reflects a core category-management principle: **a SKU should not be evaluated using sales alone**.
+
+---
+
+## End-to-End Analytical Architecture
+
+```text
+BUSINESS QUESTIONS & KPI DEFINITIONS
+                ↓
+        SYNTHETIC SOURCE DATA
+                ↓
+       SQL SERVER STAGING LAYER
+                ↓
+      DATA QUALITY & RECONCILIATION
+                ↓
+        ANALYTICAL SQL VIEWS
+                ↓
+       SQL BUSINESS ANALYSIS
+                ↓
+      PYTHON VALIDATION / EDA
+                ↓
+       POWER BI / DAX DESIGN
+                ↓
+ CATEGORY DASHBOARDS & DECISIONS
+                ↓
+        GIT / GITHUB PORTFOLIO
+```
+
+### Engineering Principle
+
+**Business logic first → data quality second → visualization last.**
+
+Fixed transformations and business rules are pushed upstream where practical. SQL acts as the analytical baseline, Python provides an independent QA layer, and DAX is reserved for reusable filter-aware report measures.
+
+---
+
+## Public Synthetic Dataset
+
+The executable SQL demo is intentionally compact and reproducible:
+
+- **5 synthetic branches**
+- **12 synthetic SKUs**
+- **4 synthetic suppliers**
+- **6 months of sales**
+- **360 branch × SKU × month sales rows**
+- synthetic inventory snapshots
+- synthetic purchase orders
+
+The repository also includes a public CSV sample for Python validation.
+
+All business names and transactions are synthetic.
 
 ---
 
 ## Grain & Source of Truth
 
-| Dataset | Grain | Key |
+| Dataset | Grain | Candidate key |
 |---|---|---|
 | Branches | one row per branch | `branch_id` |
 | Products | one row per SKU | `sku_id` |
@@ -77,13 +133,13 @@ The project follows the principle: **business logic first, data quality second, 
 | Inventory | one row per snapshot × branch × SKU | `snapshot_date + branch_id + sku_id` |
 | Purchase Orders | one row per PO line in the compact demo | `po_id` |
 
-SQL Server is the calculation baseline for the executable demo. DAX measures are validated against the same KPI definitions rather than redefining business logic independently.
+SQL Server is the calculation baseline for the executable demo. Python and DAX use the same KPI definitions rather than redefining business logic independently.
 
 ---
 
-## Core Business Domains
+## Analytical Domains
 
-### Category & SKU Performance
+### 1. Category & SKU Performance
 
 - Net Sales
 - Units Sold
@@ -94,9 +150,9 @@ SQL Server is the calculation baseline for the executable demo. DAX measures are
 - Rate / velocity-oriented measures
 - Category / Brand / SKU ranking
 
-### Assortment Optimization
+### 2. Assortment Optimization
 
-Decision-support flags combine sales, stock and availability signals to identify:
+The analytical layer generates decision-support review flags:
 
 - `KEEP`
 - `PROTECT-REPLENISH`
@@ -104,11 +160,11 @@ Decision-support flags combine sales, stock and availability signals to identify
 - `REVIEW-REMOVE`
 - `EXPIRY-ACTION`
 
-These are analytical review candidates, not automatic commercial decisions.
+These flags combine commercial, stock, and availability signals. They are **review candidates, not autonomous commercial decisions**.
 
-### Inventory & Availability
+### 3. Inventory & Availability
 
-- Stock Units / Cost
+- Stock Units / Stock Cost
 - Days of Coverage
 - OOS Exposure
 - Overstock
@@ -116,7 +172,7 @@ These are analytical review candidates, not automatic commercial decisions.
 - Near Expiry
 - GMROI proxy
 
-### Supplier / Vendor Performance
+### 4. Supplier / Vendor Performance
 
 - Supplier Net Sales
 - Supplier Gross Margin
@@ -126,18 +182,20 @@ These are analytical review candidates, not automatic commercial decisions.
 - Late PO Count
 - Service status vs target
 
-### Pricing & Profitability
+### 5. Pricing & Profitability
 
 - Regular Price vs Unit Cost
 - Gross Margin Value / %
 - High-volume / low-margin exceptions
 - High-margin / low-velocity opportunities
 
-### Promotion Analytics
+### 6. Promotion Analytics
 
-The demo supports **descriptive** promo vs non-promo comparisons for units, sales and margin. It deliberately does **not** claim causal uplift without an appropriate experimental or matched comparison design.
+The portfolio supports **descriptive** promo vs non-promo comparisons for units, sales, and margin.
 
-### Branch / Cluster Analysis
+It deliberately does **not** claim causal uplift without an experimental, matched, or otherwise valid causal design.
+
+### 7. Branch / Local Market Analysis
 
 - City / branch category performance
 - Sales and units by local market
@@ -146,23 +204,23 @@ The demo supports **descriptive** promo vs non-promo comparisons for units, sale
 
 ---
 
-## Key KPIs
+## Core KPIs
 
-| KPI | Business Definition |
+| KPI | Business definition |
 |---|---|
-| Net Sales | Gross Sales − Discount Value |
-| Gross Margin | Net Sales − Cost Value |
-| Gross Margin % | Gross Margin / Net Sales |
-| Sales Contribution % | SKU/Category Net Sales / Relevant Total Sales |
-| Distribution % | Stores Selling / Eligible Stores |
-| Days of Coverage | Stock Units / Average Daily Units |
-| GMROI Proxy | Gross Margin / Current Inventory Cost |
-| Supplier Fulfillment % | Received Qty / Ordered Qty |
-| Lead Time | Received Date − Order Date |
-| Near Expiry Units | Stock expiring inside defined 90-day horizon |
-| OOS Locations | Branch-SKU locations with zero stock |
+| **Net Sales** | Gross Sales − Discount Value |
+| **Gross Margin** | Net Sales − Cost Value |
+| **Gross Margin %** | Gross Margin / Net Sales |
+| **Sales Contribution %** | SKU or Category Net Sales / Relevant Total Sales |
+| **Distribution %** | Stores Selling / Eligible Stores |
+| **Days of Coverage** | Stock Units / Average Daily Units |
+| **GMROI Proxy** | Gross Margin / Current Inventory Cost |
+| **Supplier Fulfillment %** | Received Qty / Ordered Qty |
+| **Lead Time** | Received Date − Order Date |
+| **Near Expiry Units** | Stock expiring inside the defined 90-day horizon |
+| **OOS Locations** | Branch-SKU locations with zero stock |
 
-Full definitions and limitations are documented in `docs/KPI_DICTIONARY.md`.
+See the full [KPI Dictionary](docs/KPI_DICTIONARY.md) for definitions, assumptions, and limitations.
 
 ---
 
@@ -185,45 +243,72 @@ Run in sequence:
 - `analytics.vw_assortment_decision`
 - `analytics.vw_branch_category_performance`
 
+### SQL Skills Demonstrated
+
+- relational modeling and grain definition
+- joins and aggregation
+- reusable analytical views
+- CTE-oriented analytical workflows
+- ranking and contribution logic
+- source-to-analytics reconciliation
+- business-rule implementation
+- exception-oriented data quality checks
+
 ---
 
 ## Data Quality Framework
 
-The project checks:
+The project explicitly checks:
 
-- duplicate business keys;
-- orphan product / branch mappings;
-- impossible price / cost values;
-- negative commercial or inventory measures;
-- `Net Sales = Gross Sales - Discount` reconciliation;
-- impossible PO quantity / date relationships;
-- source-to-analytical Net Sales reconciliation;
-- source-to-analytical Gross Margin reconciliation.
+- duplicate business keys
+- orphan product and branch mappings
+- impossible price / cost values
+- negative commercial or inventory measures
+- `Net Sales = Gross Sales - Discount` reconciliation
+- impossible purchase-order quantity / date relationships
+- source-to-analytical Net Sales reconciliation
+- source-to-analytical Gross Margin reconciliation
 
-Exceptions are surfaced for review rather than hidden with `DISTINCT` or arbitrary null replacement.
+Exceptions are surfaced for review rather than hidden using `DISTINCT`, arbitrary null replacement, or silent filtering.
+
+See [Data Quality](docs/DATA_QUALITY.md) and [Validation](docs/VALIDATION.md).
 
 ---
 
-## Python Validation
+## Python Validation & EDA
 
-`python/category_validation.py` provides a second analytical QA layer using the public sample CSVs.
+`python/category_validation.py` provides an independent analytical QA layer using the public synthetic sample.
 
-It validates keys and commercial arithmetic, merges data using explicit relationship validation, produces category and SKU analysis, creates ABC segmentation and exports supplier-service checks.
+It:
+
+- validates core business keys
+- checks sales arithmetic
+- validates merge cardinality explicitly
+- produces category performance outputs
+- builds SKU ABC segmentation
+- calculates supplier fulfillment
+- exports review tables locally
 
 ```bash
 pip install -r requirements.txt
 python python/category_validation.py
 ```
 
-Outputs are written locally to `outputs/` and are ignored by Git by default.
+Expected successful execution ends with:
+
+```text
+Validation PASS
+```
+
+Generated outputs are written to `outputs/` and are ignored by Git.
 
 ---
 
-## Power BI Design
+## Power BI / DAX Reporting Design
 
-The Power BI layer is designed around business-ready SQL outputs.
+The Power BI layer is designed around business-ready SQL outputs rather than duplicating upstream logic.
 
-Recommended pages:
+### Planned Analytical Pages
 
 1. **Executive Category Overview**
 2. **Category & SKU Performance**
@@ -234,21 +319,45 @@ Recommended pages:
 7. **Promotion Review**
 8. **Branch / Cluster Analysis**
 
-DAX measures are documented in `powerbi/DAX_MEASURES.md`. Fixed cleaning / standardization belongs upstream; DAX is reserved for reusable, filter-aware semantic measures.
+DAX measures are documented in [`powerbi/DAX_MEASURES.md`](powerbi/DAX_MEASURES.md).
+
+Fixed cleaning and standardization belong upstream; DAX is used for reusable, filter-aware semantic measures.
+
+> This repository documents the Power BI semantic/report design and DAX layer. It does not claim a fully packaged PBIX dashboard artifact.
 
 ---
 
 ## Excel / Power Query Role
 
-Excel is treated as a structured analytical tool, not a manual copy/paste layer:
+Excel is treated as a structured analytical tool rather than a manual copy/paste layer:
 
-- Power Query for repeatable preparation and operational review files;
-- Excel Tables for structured inputs;
-- PivotTables for fast category slicing / aggregation;
-- formulas only for appropriate interactive worksheet calculations;
-- Inputs / Calculations / Outputs kept logically separate.
+- Power Query for repeatable preparation and operational review files
+- Excel Tables for structured inputs
+- PivotTables for quick category slicing
+- formulas only where appropriate for interactive worksheet calculations
+- clear separation between Inputs / Calculations / Outputs
 
-The SQL / Power BI implementation remains the portfolio's primary reproducible analytical path.
+The SQL / Python / Power BI implementation remains the primary reproducible portfolio path.
+
+---
+
+## Validation Strategy
+
+The project uses multiple independent validation layers:
+
+```text
+Synthetic Source Data
+      ↓
+SQL DQ Checks
+      ↓
+SQL Analytical Reconciliation
+      ↓
+Python Independent Validation
+      ↓
+DAX / Report KPI Definitions
+```
+
+This prevents a visually correct dashboard from being accepted when the underlying business logic is wrong.
 
 ---
 
@@ -256,7 +365,14 @@ The SQL / Power BI implementation remains the portfolio's primary reproducible a
 
 ```text
 pharmacy-category-management/
+├── .github/
+│   └── workflows/
+│       └── python-validation.yml
 ├── README.md
+├── LICENSE
+├── CHANGELOG.md
+├── CONTRIBUTING.md
+├── SECURITY.md
 ├── requirements.txt
 ├── .gitignore
 ├── data/
@@ -286,35 +402,80 @@ pharmacy-category-management/
     ├── KPI_DICTIONARY.md
     ├── BUSINESS_RULES.md
     ├── DATA_QUALITY.md
+    ├── VALIDATION.md
     └── POWER_BI_DESIGN.md
 ```
 
 ---
 
-## Portfolio Relevance
+## Skills Demonstrated
 
-This project is specifically relevant to roles such as:
+### Technical
 
-- E-commerce Category Specialist
-- Category Analyst / Category Management Analyst
-- Pharmacy / Retail Data Analyst
-- Commercial Analytics Analyst
-- Inventory Analyst
-- Business Intelligence Analyst
-- Retail Performance Analyst
+`SQL Server` · `T-SQL` · `Python` · `pandas` · `Power BI` · `DAX` · `Power Query` · `Excel` · `Git` · `GitHub` · `Data Modeling` · `Data Quality` · `Reconciliation` · `KPI Design` · `Analytical Views`
 
-It demonstrates the intersection of **pharmacy retail domain knowledge + category management + Power BI/SQL/Python + inventory and supplier analytics**.
+### Analytical / Business
+
+`Category Management` · `Pharmacy Retail Analytics` · `Commercial Analytics` · `Assortment Optimization` · `Inventory Analytics` · `Supplier Performance` · `Pricing & Profitability` · `Promotion Analysis` · `Branch Performance` · `Decision Support`
+
+### Engineering Practices
+
+`Synthetic Data` · `Reproducibility` · `Explicit Grain` · `Validation Layers` · `Source of Truth` · `Business Rules` · `Documentation` · `Version Control` · `CI Validation`
+
+---
+
+## Portfolio Value
+
+This project is intentionally positioned at the intersection of **business understanding and technical analytics**.
+
+It demonstrates that the analyst can:
+
+1. translate category-management problems into measurable business questions;
+2. define data grain and KPI logic before visualization;
+3. build reproducible SQL analytical layers;
+4. validate results independently with Python;
+5. document Power BI/DAX reporting logic;
+6. identify inventory, supplier, margin, and assortment exceptions;
+7. communicate limitations instead of overstating analytical conclusions.
+
+That combination is particularly relevant to pharmacy retail, e-commerce, category management, commercial excellence, and business analytics roles.
+
+---
+
+## Documentation
+
+| Document | Purpose |
+|---|---|
+| [Architecture](docs/ARCHITECTURE.md) | End-to-end analytical architecture |
+| [Business Rules](docs/BUSINESS_RULES.md) | Commercial and operational rules |
+| [Data Dictionary](docs/DATA_DICTIONARY.md) | Dataset fields and definitions |
+| [KPI Dictionary](docs/KPI_DICTIONARY.md) | KPI formulas, interpretation, limitations |
+| [Data Quality](docs/DATA_QUALITY.md) | DQ framework and controls |
+| [Validation](docs/VALIDATION.md) | Reconciliation and QA approach |
+| [Power BI Design](docs/POWER_BI_DESIGN.md) | Dashboard/report specification |
+| [Setup](docs/SETUP.md) | Local execution instructions |
 
 ---
 
 ## Limitations
 
 - Public data is synthetic and intentionally small for reproducibility.
-- The SQL demo is a portfolio model, not a live pharmacy production database.
-- `GMROI Proxy` uses the available inventory snapshot rather than a full average-inventory accounting history.
+- This is a production-style analytical portfolio, not a live pharmacy production system.
+- `GMROI Proxy` uses the available inventory snapshot rather than full average-inventory accounting history.
 - Promotion comparisons are descriptive and do not establish causation.
-- Competitor pricing, customer-level behavior and planogram data are outside the current public sample.
-- A Power BI `.pbix` binary is not required in the repository; model / DAX / report design documentation is kept reviewable in Git.
+- Competitor pricing, customer-level behavior, prescription data, and planogram data are outside the public sample.
+- Power BI design/DAX artifacts are documented, but a binary `.pbix` is not required for the repository.
+
+---
+
+## Privacy & Portfolio Integrity
+
+- **100% synthetic public data**
+- no employer or internal company data
+- no customer information
+- no prescription or patient information
+- no credentials, passwords, API keys, or database dumps
+- no unsupported causal claims
 
 ---
 
@@ -323,4 +484,4 @@ It demonstrates the intersection of **pharmacy retail domain knowledge + categor
 **Khaled Zidan**  
 Category Management · Pharmacy Retail · Data Analytics · Business Intelligence
 
-> **Category analytics connects sales, margin, assortment, inventory and supplier performance to better commercial decisions.**
+> **Category analytics connects sales, margin, assortment, inventory, and supplier performance to better commercial decisions.**
