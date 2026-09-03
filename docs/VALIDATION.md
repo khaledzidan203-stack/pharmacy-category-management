@@ -11,6 +11,16 @@ The six SQL files were executed in order against SQL Server Express on 2026-09-0
 5. `sql/05_data_quality_validation.sql`
 6. `sql/06_business_analysis.sql`
 
+| Gate | Status |
+|---|---|
+| SQL Execution | PASS |
+| Row Counts | PASS |
+| Data Quality | PASS |
+| SQL Reconciliation | PASS |
+| Python Validation | PASS |
+| Repository Review | PASS |
+| Power BI Reconciliation | PENDING MANUAL |
+
 ### Row counts
 
 | Object | Rows |
@@ -54,9 +64,9 @@ The six SQL files were executed in order against SQL Server Express on 2026-09-0
 - Gross Margin: SAR 23,584.20
 - Top category: Vitamins
 
-## Power BI
+## Power BI Reconciliation
 
-Power BI Desktop and PBIX measures were not tested. No Power BI pass is claimed.
+PENDING MANUAL. Power BI Desktop and PBIX measures were not tested. No Power BI pass is claimed.
 
 ## Portfolio integrity
 
