@@ -1,0 +1,16 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+outputs/
+logs/
+temp/
+*.bak
+*.tmp
+*.pbix
+*.pbit
+*.bak.pbix
+*.mdf
+*.ldf
+*.bak

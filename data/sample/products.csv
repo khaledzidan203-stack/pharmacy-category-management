@@ -1,0 +1,13 @@
+sku_id,sku_name,category,subcategory,brand,supplier_id,unit_cost,regular_price
+1001,Vitamin C 1000mg,Vitamins,Vitamin C,VitaPlus,101,18,29
+1002,Multivitamin 30 Tabs,Vitamins,Multivitamins,DailyHealth,101,24,39
+1003,Omega 3 60 Caps,Vitamins,Omega,NutriSea,103,28,49
+1004,Sensitive Toothpaste,Oral Care,Toothpaste,SmileCare,102,12,22
+1005,Whitening Toothpaste,Oral Care,Toothpaste,BrightDent,102,10,19
+1006,Moisturizing Cream 100ml,Dermocosmetics,Moisturizer,DermaSoft,104,35,59
+1007,Sunscreen SPF50,Dermocosmetics,Sun Care,SunGuard,104,42,79
+1008,Baby Shampoo,Baby Care,Bath,BabyPure,102,16,28
+1009,Baby Diapers M 40,Baby Care,Diapers,BabyPure,102,38,55
+1010,Protein Bar Chocolate,Nutrition,Healthy Snacks,FitBite,103,5,9
+1011,Collagen Sachets,Vitamins,Beauty Supplements,GlowLab,103,52,85
+1012,Acne Gel 30ml,Dermocosmetics,Acne Care,DermaSoft,104,27,46
