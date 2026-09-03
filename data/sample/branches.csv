@@ -1,0 +1,6 @@
+branch_id,branch_name,city,cluster,size
+1,Khobar Central,Khobar,A,Large
+2,Khobar North,Khobar,B,Medium
+3,Dammam Corniche,Dammam,A,Large
+4,Dammam West,Dammam,B,Medium
+5,Dhahran Gate,Dhahran,A,Small
