@@ -1,43 +1,62 @@
 # Validation Notes
 
-## Current validation status
+## Execution results
 
-This repository was upgraded from documentation-only to an implementation-backed portfolio branch.
+The six SQL files were executed in order against SQL Server Express on 2026-09-03:
 
-### Completed structural checks
+1. `sql/01_create_schema.sql`
+2. `sql/02_create_tables.sql`
+3. `sql/03_seed_synthetic_data.sql`
+4. `sql/04_analytics_views.sql`
+5. `sql/05_data_quality_validation.sql`
+6. `sql/06_business_analysis.sql`
 
-- Executable SQL build sequence is present.
-- Staging table keys and fact grains are explicitly documented.
-- Synthetic seed logic creates 5 branches × 12 SKUs × 6 months = **360 sales rows**.
-- Analytical views use defined grains and avoid fact-to-fact aggregation joins.
-- Data-quality SQL includes duplicate, orphan, commercial arithmetic, inventory, PO and reconciliation checks.
-- Python validation uses explicit `many_to_one` relationship validation and asserts commercial arithmetic.
-- DAX definitions are documented separately and are intended to reconcile to SQL baselines.
+### Row counts
 
-### Independent arithmetic cross-check of deterministic sales seed
+| Object | Rows |
+|---|---:|
+| Branches | 5 |
+| Suppliers | 4 |
+| Products | 12 |
+| Sales | 360 |
+| Inventory | 60 |
+| Purchase orders | 10 |
 
-The seed-generation formula was independently reproduced during portfolio preparation.
+### Data quality
 
-Expected six-month synthetic sales totals from that formula:
+| Check | Result |
+|---|---:|
+| Duplicate sales keys | 0 |
+| Duplicate inventory keys | 0 |
+| Orphan sales products | 0 |
+| Orphan sales branches | 0 |
+| Invalid prices/costs | 0 |
+| Invalid sales arithmetic | 0 |
+| Negative inventory | 0 |
+| Invalid purchase-order records | 0 |
 
-- Net Sales: **SAR 494,422.50**
-- Gross Margin: **SAR 193,531.50**
-- Sales rows: **360**
+### SQL reconciliation
 
-These are expected reference totals for SQL reconciliation.
+| Metric | Result |
+|---|---:|
+| Source Net Sales | SAR 494,422.50 |
+| Source Gross Margin | SAR 193,531.50 |
+| Net Sales reconciliation difference | 0.00 |
+| Gross Margin reconciliation difference | 0.00 |
 
-## Release gate still requiring local execution
+## Python validation
 
-The GitHub environment used to prepare this branch does not execute SQL Server or Power BI Desktop. Before merging as a final release, run locally:
+`python python/category_validation.py` completed with `Validation PASS`.
 
-1. all six SQL scripts in order;
-2. `sql/05_data_quality_validation.sql` and confirm no unexpected exception rows;
-3. source vs analytical Net Sales difference = 0;
-4. source vs analytical Gross Margin difference = 0;
-5. `python python/category_validation.py` and confirm `Validation PASS`;
-6. Power BI measures vs SQL baselines at total and filtered levels.
+- Sales rows: 36
+- Products: 12
+- Net Sales: SAR 59,560.20
+- Gross Margin: SAR 23,584.20
+- Top category: Vitamins
 
-Do not label the project fully execution-validated until those local checks pass.
+## Power BI
+
+Power BI Desktop and PBIX measures were not tested. No Power BI pass is claimed.
 
 ## Portfolio integrity
 
