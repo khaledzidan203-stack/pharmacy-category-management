@@ -1,8 +1,10 @@
-# Power BI Design — Pharmacy E-commerce Category Management
+# Power BI Design Blueprint — Pharmacy Category Management
 
-This document defines a management-ready Power BI report structure for the portfolio project.
+> **Implementation status — design blueprint only.** There is no committed PBIX, PBIP, PBIR, TMDL or PBIT runtime artifact.
 
-## Report Navigation
+The proposed report should consume business-ready SQL analytical views rather than re-implementing fixed cleaning logic inside DAX.
+
+## Recommended report navigation
 
 1. Executive Category Overview
 2. Category & SKU Performance
@@ -10,205 +12,124 @@ This document defines a management-ready Power BI report structure for the portf
 4. Inventory & Availability
 5. Supplier Performance
 6. Pricing & Profitability
-7. Promotion Analysis
+7. Promotion Review
 8. Branch / Cluster Analysis
 9. Data Quality
 
----
+## Recommended source views
+
+- `analytics.vw_sku_performance`
+- `analytics.vw_category_scorecard`
+- `analytics.vw_supplier_performance`
+- `analytics.vw_assortment_decision`
+- `analytics.vw_branch_category_performance`
 
 ## 1. Executive Category Overview
 
-### KPI Cards
+Suggested KPI cards:
+
 - Net Sales
-- Sales Growth %
-- Gross Margin Value
+- Gross Margin
 - Gross Margin %
-- Stock Value
-- GMROI
-- OOS SKU Count
-- Dead Stock Value
-- Near Expiry Value
+- Stock Cost
+- GMROI Proxy
+- OOS Locations
+- Near Expiry Units
+- Assortment Review SKU Count
 
-### Visuals
-- Category Sales vs Margin matrix
-- Top / Bottom categories by sales growth
-- Stock coverage distribution
-- Exception summary by category
-- Supplier contribution concentration
+Suggested visuals:
 
-### Filters
-- Date
-- Region / City
-- Branch
-- Department
-- Category
-- Subcategory
-- Brand
-- Supplier
-
----
+- Category Net Sales vs Margin
+- Category contribution
+- coverage distribution
+- supplier service exceptions
+- assortment-action summary
 
 ## 2. Category & SKU Performance
 
-### Measures
 - Net Sales
-- Units Sold
-- Sales Contribution %
+- Units
+- Contribution %
 - Gross Margin %
-- ROS
 - Distribution %
-- Growth %
-
-### Visuals
-- Hierarchical category drill-down
-- Top 20 SKUs by sales / margin
-- Sales vs ROS scatter
-- Contribution Pareto / ABC view
-- Trend chart by category / brand
-
----
+- Days of Coverage
+- ABC / Pareto view
 
 ## 3. Assortment Optimization
 
-### Decision Table
-Columns:
+Decision table:
+
 - SKU
 - Category
 - Brand
-- Sales Contribution %
-- ROS
+- Net Sales
+- Contribution %
 - Margin %
 - Distribution %
 - Days of Coverage
-- Dead Stock Flag
-- Near Expiry Flag
-- Supplier Fulfillment %
-- ABC Class
-- Suggested Review Action
+- Inventory Status
+- Assortment Action
+- Near Expiry Units
+- OOS Locations
 
-### Visuals
-- Add / Keep / Remove candidate count
-- Assortment action by category
-- High stock / low sales quadrant
-- High sales / low distribution opportunities
-
----
+The current SQL-demo action is a single prioritized label, not a multi-label risk array.
 
 ## 4. Inventory & Availability
 
-### KPI Cards
 - Stock Units
-- Stock Value
-- Average Days of Coverage
-- OOS SKU Count
-- Overstock Value
-- Dead Stock Value
-- Near Expiry Value
-
-### Visuals
-- Coverage bands
-- OOS by category / branch
-- Dead stock by supplier / category
-- Near expiry aging buckets
-- Warehouse vs branch availability
-
----
+- Stock Cost
+- Days of Coverage
+- OOS Locations
+- Near Expiry Units
+- inventory-status distribution
 
 ## 5. Supplier Performance
 
-### KPI Cards
-- Supplier Count
-- PO Value
-- Average Fulfillment %
+- Supplier Net Sales
+- Supplier Gross Margin
+- Fulfillment %
 - Average Lead Time
-
-### Visuals
-- Supplier Sales vs Margin Contribution
-- Fulfillment vs Lead Time scatter
-- Category dependency by supplier
-- Top supplier service exceptions
-
----
+- Late PO Count
+- service status vs target
 
 ## 6. Pricing & Profitability
 
-### KPI Cards
-- Average Selling Price
+- Regular Price
+- Unit Cost
 - Gross Margin %
-- Low-Margin SKU Count
-- Below-Cost Exception Count
+- high-volume / low-margin exceptions
+- high-margin / low-velocity exceptions
 
-### Visuals
-- Category price ladder
-- Sales vs Margin scatter
-- High-volume / low-margin exceptions
-- Brand profitability comparison
-- Cost vs selling-price trend
+## 7. Promotion Review
 
----
+Current public SQL supports descriptive promo vs non-promo comparison.
 
-## 7. Promotion Analysis
-
-When promotion-level data is available:
-
-### KPIs
-- Promo Sales
-- Baseline Sales
-- Sales Uplift %
-- Unit Uplift %
-- Discount %
-- Margin Impact
-
-### Visuals
-- Pre / During / Post trend
-- Promotion performance by category
-- Discount vs uplift scatter
-- Promotion stock-availability exceptions
-
-### Caveat
-The page should distinguish descriptive uplift from causal impact.
-
----
+Do not label descriptive differences as causal uplift.
 
 ## 8. Branch / Cluster Analysis
 
-### Visuals
-- Branch / cluster category mix
-- Category performance by branch cluster
-- Stock coverage by cluster
-- Distribution gap by cluster
-- Assortment localization opportunities
-
----
+- city / branch category mix
+- Net Sales
+- Units
+- Gross Margin
+- Gross Margin %
 
 ## 9. Data Quality
 
-### KPI Cards
-- Unmapped SKU Rows
-- Missing Supplier Rows
-- Duplicate Business Keys
-- Invalid Price / Cost Rows
-- Missing Category Hierarchy Rows
+- duplicate business keys
+- orphan product / branch references
+- invalid price / cost records
+- invalid sales arithmetic
+- inventory validity issues
+- invalid PO relationships
+- source-to-analytics reconciliation
 
-### Visuals
-- DQ exceptions by type
-- DQ trend
-- DQ source table
+## DAX role
 
----
+DAX should be reserved for reusable filter-aware calculations. Fixed cleaning, master-data logic and relational business rules should remain upstream.
 
-## UX Principles
+Suggested measures are documented in [../powerbi/DAX_MEASURES.md](../powerbi/DAX_MEASURES.md).
 
-- Keep visual hierarchy consistent across pages.
-- Use business-language labels rather than technical field names.
-- Use tooltips to explain KPI formulas and thresholds.
-- Allow drill-down from Category → Brand → SKU and Region → Branch.
-- Surface exceptions before requiring the user to search for them.
-- Use conditional formatting for risk/status only when the threshold is documented.
-- Avoid hiding data-quality limitations.
+## Evidence boundary
 
-## Example Management Story
-
-A manager should be able to move through the report in this sequence:
-
-`Where is performance off target? → Which category/SKU drives the gap? → Is the issue demand, margin, availability, assortment, or supplier service? → What action should be reviewed?`
+The Power BI pages above are a design specification. No report refresh, visual screenshot, PBIX execution, or cross-tool Power BI reconciliation is claimed in the current public release.
