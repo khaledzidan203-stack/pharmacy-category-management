@@ -1,7 +1,8 @@
-"""Pharmacy Category Management - validation and EDA helper.
+"""Pharmacy Category Management - independent CSV QA and EDA helper.
 
-Reads the public synthetic sample CSVs, validates basic data quality,
-reconciles commercial totals, and exports review tables.
+Reads the compact public synthetic CSV fixture, validates key and arithmetic
+rules, produces category / SKU / supplier review outputs, and remains separate
+from the larger deterministic SQL Server demo.
 
 No confidential or production data is used.
 """
@@ -27,12 +28,29 @@ def main():
 
     # ---- Data quality ----
     assert not products["sku_id"].duplicated().any(), "Duplicate SKU keys"
+    assert not suppliers["supplier_id"].duplicated().any(), "Duplicate supplier keys"
     assert not sales.duplicated(["sales_date", "branch_id", "sku_id"]).any(), "Duplicate sales grain"
-    assert set(sales["sku_id"]).issubset(set(products["sku_id"])), "Orphan sales SKU"
+    assert not inventory.duplicated(["snapshot_date", "branch_id", "sku_id"]).any(), "Duplicate inventory grain"
+
+    branch_ids = set(pd.read_csv(DATA / "branches.csv")["branch_id"])
+    product_ids = set(products["sku_id"])
+    supplier_ids = set(suppliers["supplier_id"])
+
+    assert set(sales["sku_id"]).issubset(product_ids), "Orphan sales SKU"
+    assert set(sales["branch_id"]).issubset(branch_ids), "Orphan sales branch"
+    assert set(inventory["sku_id"]).issubset(product_ids), "Orphan inventory SKU"
+    assert set(inventory["branch_id"]).issubset(branch_ids), "Orphan inventory branch"
+    assert set(purchase_orders["sku_id"]).issubset(product_ids), "Orphan PO SKU"
+    assert set(purchase_orders["supplier_id"]).issubset(supplier_ids), "Orphan PO supplier"
+
     assert (sales[["units_sold", "gross_sales", "discount_value", "net_sales", "cost_value"]] >= 0).all().all()
     assert ((sales["gross_sales"] - sales["discount_value"] - sales["net_sales"]).abs() < 0.01).all()
-    assert (inventory["stock_units"] >= 0).all()
+    assert (inventory[["stock_units", "stock_cost"]] >= 0).all().all()
+    assert (purchase_orders["ordered_qty"] > 0).all()
+    assert (purchase_orders["received_qty"] >= 0).all()
     assert (purchase_orders["received_qty"] <= purchase_orders["ordered_qty"]).all()
+    assert (purchase_orders["expected_date"] >= purchase_orders["order_date"]).all()
+    assert (purchase_orders["received_date"] >= purchase_orders["order_date"]).all()
 
     # ---- Commercial layer ----
     df = sales.merge(products, on="sku_id", how="left", validate="many_to_one")
