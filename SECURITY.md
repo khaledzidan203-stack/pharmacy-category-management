@@ -1,27 +1,30 @@
 # Security & Data Policy
 
-## Public Portfolio Scope
+## Public repository scope
 
-This repository is intended for public portfolio use and must contain only synthetic or intentionally public demonstration data.
+This repository must contain only synthetic or intentionally public demonstration material.
 
 Do not commit:
 
-- employer or internal company data
-- customer or patient information
-- prescription or health records
-- National IDs or personal identifiers
-- passwords, API keys, tokens, connection strings, or secrets
-- production database files, backups, server addresses, or credentials
+- employer or internal company data;
+- customer or patient information;
+- prescription or health records;
+- government identifiers or personal identifiers;
+- passwords, API keys, tokens, connection strings, certificates, or secrets;
+- production database files, backups, server addresses, or credentials;
+- confidential supplier terms or commercial agreements.
 
-## Reporting a Problem
+## Reporting a problem
 
-If sensitive information is discovered, do not open a public issue containing the sensitive content. Remove the exposed material from the working branch/history as appropriate and rotate any affected credential outside this repository.
+If sensitive information is discovered, do not open a public issue containing the sensitive value. Remove the material from the branch/history as appropriate and rotate any affected credential outside this repository.
 
-## Analytical Integrity
+## Analytical integrity
 
-Security also includes protecting analytical integrity:
+Security includes analytical integrity:
 
 - do not silently suppress data-quality exceptions;
-- do not change KPI definitions without documentation;
-- do not present descriptive promotion analysis as causal impact;
-- keep assortment recommendations as decision-support flags rather than automated commercial decisions.
+- do not change KPI definitions without documentation and regression coverage;
+- do not merge the SQL full demo and Python CSV fixture into one claimed dataset;
+- do not present descriptive promotion analysis as causal;
+- do not present review labels as automated commercial decisions;
+- do not claim Power BI runtime validation without a committed runtime artifact and reconciliation evidence.
