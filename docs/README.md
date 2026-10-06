@@ -1,14 +1,34 @@
 # Documentation Index
 
-Use this folder as the review center for the portfolio.
+## Start here
 
-- [Setup](SETUP.md) — reproducible SQL / Python / Power BI setup sequence.
-- [Architecture](ARCHITECTURE.md) — grain, layers, calculation ownership and join safety.
-- [Data Dictionary](DATA_DICTIONARY.md) — table and field meanings.
-- [KPI Dictionary](KPI_DICTIONARY.md) — business definitions, formulas and limitations.
-- [Business Rules](BUSINESS_RULES.md) — assortment, inventory, pricing, supplier and promotion rules.
-- [Data Quality](DATA_QUALITY.md) — validation and reconciliation framework.
-- [Power BI Design](POWER_BI_DESIGN.md) — report pages and analytical user experience.
-- [Validation Notes](VALIDATION.md) — what has and has not been execution-validated.
+- [Project Index](PROJECT_INDEX.md)
+- [Case Study](CASE_STUDY.md)
+- [Technical Walkthrough](TECHNICAL_WALKTHROUGH.md)
+- [Project Evidence Map](PROJECT_EVIDENCE_MAP.md)
+- [Final Release Validation](FINAL_RELEASE_VALIDATION.md)
 
-The repository intentionally separates business definitions, data quality, analytical logic and presentation so each layer can be reviewed independently.
+## Analytical design
+
+- [Architecture](ARCHITECTURE.md)
+- [Business Rules](BUSINESS_RULES.md)
+- [Data Dictionary](DATA_DICTIONARY.md)
+- [KPI Dictionary](KPI_DICTIONARY.md)
+- [Data Quality](DATA_QUALITY.md)
+- [Validation](VALIDATION.md)
+
+## Reporting blueprint
+
+- [Power BI Design](POWER_BI_DESIGN.md)
+- [DAX Measures](../powerbi/DAX_MEASURES.md)
+
+## Setup and environment
+
+- [Setup](SETUP.md)
+- [Environment Baseline](ENVIRONMENT_BASELINE.md)
+
+## Presentation evidence
+
+- [Presentation Assets](assets/README.md)
+
+The repository intentionally separates the SQL full demo, the smaller Python CSV QA sample, and the Power BI design blueprint so implementation evidence is not overstated.
