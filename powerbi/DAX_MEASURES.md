@@ -1,7 +1,8 @@
-# Power BI DAX Measures
+# Power BI DAX Measures — Design Blueprint
 
-The model should import business-ready SQL views rather than re-implementing data cleaning in DAX.
-Static transformations belong upstream; DAX is used for filter-aware analytical measures.
+> These measures are design references only. No committed Power BI runtime model has executed or reconciled them in this repository.
+
+The model should import business-ready SQL views rather than re-implement fixed data cleaning in DAX.
 
 ```DAX
 Net Sales =
@@ -50,21 +51,26 @@ CALCULATE (
 )
 ```
 
-## Validation rule
+## Reconciliation rule
 
-For every KPI shared by SQL and Power BI:
+For every KPI shared by SQL and a future Power BI model:
 
-1. Define the business meaning once in the KPI dictionary.
-2. Calculate an SQL baseline first.
-3. Reconcile the DAX output against the SQL baseline at total and filtered levels.
-4. Investigate any difference before dashboard release.
+1. define the business meaning once;
+2. calculate the SQL baseline first;
+3. calculate the DAX result;
+4. reconcile totals and filtered slices;
+5. investigate every difference before accepting the report.
 
 ## Recommended model
 
-- `vw_sku_performance`: SKU analytical fact-like view.
-- `vw_category_scorecard`: category summary for QA / executive checks.
-- `vw_supplier_performance`: supplier service and commercial view.
-- `vw_assortment_decision`: SKU decision-support view.
-- `vw_branch_category_performance`: branch × category performance.
+- `vw_sku_performance` — SKU analytical fact-like view
+- `vw_category_scorecard` — category QA / executive summary
+- `vw_supplier_performance` — supplier service/commercial view
+- `vw_assortment_decision` — SKU review-action view
+- `vw_branch_category_performance` — branch × category performance
 
-Where a production model is required, split reusable dimensions (Date, Product, Category, Supplier, Branch) from facts and keep a clear star-schema grain. This compact portfolio uses views to keep setup reproducible and reviewable.
+A larger production model should split reusable Date, Product, Category, Supplier and Branch dimensions from historical facts with explicit grains.
+
+## Limitation
+
+`GMROI Proxy` uses current snapshot Stock Cost, not average inventory cost over time.
