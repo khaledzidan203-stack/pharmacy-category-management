@@ -1,13 +1,15 @@
-name: Python Portfolio Validation
+name: Category Analytics Validation
 
 on:
   push:
-    branches: [main]
   pull_request:
-    branches: [main]
+
+permissions:
+  contents: read
 
 jobs:
   validate:
+    name: Category management analytical quality gate
     runs-on: ubuntu-latest
 
     steps:
@@ -21,7 +23,20 @@ jobs:
           cache: pip
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: python -m pip install -r requirements.txt
 
-      - name: Run category validation
+      - name: Validate repository and evidence contract
+        run: python python/repository_validation.py
+
+      - name: Run independent Python QA
         run: python python/category_validation.py
+
+      - name: Run analytical and SQL-source regression tests
+        run: python -m unittest discover -s tests -p "test_*.py" -v
+
+      - name: Compile Python sources
+        run: |
+          python -m py_compile python/category_validation.py
+          python -m py_compile python/repository_validation.py
+          python -m py_compile tests/test_python_sample.py
+          python -m py_compile tests/test_sql_contract.py
