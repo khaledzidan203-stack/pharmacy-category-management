@@ -1,99 +1,99 @@
 # Data Quality Framework — Pharmacy Category Analytics
 
-Reliable category decisions require reliable source data. This framework defines the minimum quality checks expected before commercial KPIs are consumed.
+Reliable category decisions require reliable source data. This framework separates checks implemented in the compact public demo from controls recommended for a larger production model.
 
-## Quality Dimensions
+## Implemented SQL-demo checks
 
-### Completeness
-- Missing SKU IDs
-- Missing category mappings
-- Missing supplier mappings
-- Missing branch mappings
-- Missing price / cost where profitability is calculated
-- Missing expiry date where batch expiry logic applies
+The SQL validation layer currently checks:
 
 ### Uniqueness
-- Duplicate item master records
-- Duplicate supplier master records
-- Duplicate branch keys
-- Duplicate sales rows according to the declared business key
-- Duplicate PO lines
 
-### Validity
-- Negative on-hand stock outside accepted business rules
-- Selling price < 0
-- Unit cost < 0
-- Ordered / received quantity < 0 unless explicitly classified as reversals
-- Invalid or impossible dates
-- Expiry date before logical receipt / stock snapshot without an explanatory status
+- duplicate Sales keys at `sales_date + branch_id + sku_id`;
+- duplicate Inventory keys at `snapshot_date + branch_id + sku_id`.
 
-### Consistency
-- SKU mapped to conflicting categories
-- Supplier IDs not present in supplier master
-- Branch IDs not present in branch master
-- Sales category inconsistent with item master hierarchy
-- Inconsistent unit-of-measure or pack-size treatment
+### Referential integrity
 
-### Timeliness
-- Stale stock snapshots
-- Delayed sales feeds
-- Purchase order status not refreshed
-- Supplier master terms not updated
+- Sales → Product;
+- Sales → Branch.
 
----
+Table foreign keys additionally constrain Products → Supplier, Inventory → Product/Branch, and Purchase Orders → Supplier/Product.
 
-## Recommended Validation Output
+### Commercial validity
 
-Each validation should produce:
+- negative Unit Cost / invalid Regular Price;
+- Regular Price below Unit Cost;
+- negative Sales quantities or amounts;
+- Net Sales arithmetic mismatch:
+  `Net Sales = Gross Sales − Discount Value`.
+
+### Inventory validity
+
+- negative Stock Units;
+- negative Stock Cost;
+- on-hand stock whose expiry date is earlier than the snapshot date.
+
+### Purchase-order validity
+
+- Ordered Qty <= 0;
+- Received Qty < 0;
+- Received Qty > Ordered Qty;
+- Expected Date before Order Date;
+- Received Date before Order Date.
+
+### Reconciliation
+
+- source Net Sales vs `analytics.vw_sku_performance`;
+- source Gross Margin vs `analytics.vw_sku_performance`.
+
+The retained SQL execution notes record zero difference for both financial reconciliations.
+
+## Implemented Python CSV checks
+
+The independent pandas QA layer currently checks:
+
+- duplicate Product keys;
+- duplicate Supplier keys;
+- duplicate Sales grain;
+- duplicate Inventory grain;
+- orphan Sales Product / Branch references;
+- orphan Inventory Product / Branch references;
+- orphan PO Product / Supplier references;
+- non-negative Sales measures;
+- Net Sales arithmetic;
+- non-negative Inventory quantities/cost;
+- valid PO quantities;
+- valid PO date ordering;
+- explicit merge cardinality.
+
+## Recommended production-quality dimensions
+
+A larger implementation should also monitor:
+
+- completeness of Category / Subcategory / Brand / Supplier mappings;
+- stale Inventory snapshots;
+- delayed Sales feeds;
+- changing hierarchy assignments;
+- duplicate PO-line business keys;
+- currency / tax / return treatment;
+- pack-size and unit-of-measure consistency;
+- effective-dated Product and Supplier attributes;
+- threshold configuration ownership.
+
+## Exception output pattern
+
+For production use, quality exceptions should use a stable structure such as:
 
 | Field | Purpose |
 |---|---|
-| `CheckName` | Stable test identifier |
-| `Severity` | Fatal / Warning / Information |
-| `Source` | Dataset or table |
-| `BusinessKey` | Record identifier |
-| `ObservedValue` | Problematic value |
-| `ExpectedRule` | Validation expectation |
-| `DetectedAt` | Audit timestamp |
-| `ResolutionStatus` | Open / Accepted / Corrected |
+| CheckName | stable validation identifier |
+| Severity | Fatal / Warning / Information |
+| Source | dataset or table |
+| BusinessKey | affected record identifier |
+| ObservedValue | problematic value |
+| ExpectedRule | expected condition |
+| DetectedAt | audit timestamp |
+| ResolutionStatus | Open / Accepted / Corrected |
 
----
+## Principle
 
-## Severity Guidance
-
-### Fatal
-Affects core totals or makes KPI calculation unreliable.
-Examples:
-- Duplicate primary business keys
-- Invalid sales amount on core transaction rows
-- Broken category / item relationship for large sales population
-
-### Warning
-Data can be retained but interpretation must be disclosed.
-Examples:
-- Missing supplier rating
-- Near-expiry record with incomplete batch metadata
-- Negative sales that may represent returns
-
-### Information
-Useful audit / profiling signal without immediate analytical impact.
-
----
-
-## Reconciliation Checks
-
-Before Power BI publication:
-
-1. Compare Bronze row counts with source-file row counts.
-2. Reconcile Silver accepted + rejected rows to Bronze totals.
-3. Reconcile Gold sales totals to Silver sales totals under identical filters.
-4. Reconcile category totals to portfolio totals.
-5. Reconcile supplier purchase value to PO source totals.
-6. Reconcile inventory quantities / value to the stock snapshot.
-7. Confirm Power BI headline measures against SQL outputs.
-
----
-
-## Reporting Principle
-
-Data-quality exceptions are part of the analytical product. They should be visible in a dedicated Data Quality page and should never be silently deleted solely to make dashboards look clean.
+Data-quality exceptions are part of the analytical product. They should be visible for review and must not be silently removed only to make summary outputs appear clean.
